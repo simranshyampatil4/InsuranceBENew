@@ -12,7 +12,12 @@ namespace InsuranceApp.Services
         {
             _entityRepository = entityRepository;
         }
-
+        public Agent GetByUserId(int id)
+        {
+            var agentData = _entityRepository.Get();
+            var agent = agentData.Where(q => q.UserId == id).FirstOrDefault();
+            return agent;
+        }
         public List<Agent> GetAll()
         {
             var agentQuery = _entityRepository.Get();

@@ -38,7 +38,12 @@ namespace InsuranceApp.Controllers
 
             throw new EntityNotFoundError("No agents created");
         }
-
+        [HttpGet("getByUserId")]
+        public IActionResult GetAgentByUserId(int id)
+        {
+            var agentData = _agentService.GetByUserId(id);
+            return Ok(agentData);
+        }
         [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
