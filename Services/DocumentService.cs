@@ -22,7 +22,10 @@ namespace InsuranceApp.Services
         public Document Get(int id)
         {
             var documentQuery = _entityRepository.Get();
-            var document = documentQuery.Where(document => document.DocumentId == id && document.IsActive)
+            //var document = documentQuery.Where(document => document.DocumentId == id && document.IsActive)
+            //                          .FirstOrDefault();
+
+            var document = documentQuery.Where(document => document.DocumentId == id)
                                       .FirstOrDefault();
             return document;
         }

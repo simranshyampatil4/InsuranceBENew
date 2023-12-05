@@ -9,6 +9,8 @@ namespace InsuranceApp.Data
         public DbSet<Agent> Agents { get; set; }
         public DbSet<Claim> Claims { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Commission> Commissions { get; set; }
+        public DbSet<CommissionWithdrawal> CommissionWithdrawals { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<InsurancePlan> InsurancePlans { get; set; }

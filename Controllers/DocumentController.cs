@@ -33,7 +33,7 @@ namespace InsuranceApp.Controllers
             throw new EntityNotFoundError("No documents created");
         }
 
-        [HttpGet("GetById")]
+        [HttpGet]
         public IActionResult GetById(int id)
         {
             var document = _documentService.Get(id);
@@ -77,6 +77,40 @@ namespace InsuranceApp.Controllers
             throw new EntityNotFoundError("No such record exists");
         }
 
+        [HttpPost("upload")]
+        public IActionResult Upload([FromForm] DocumentDto documentDto)
+        {
+
+            if (documentDto.File == null || documentDto.File.Length == 0)
+            {
+                return BadRequest("File is not selected or empty");
+            }
+
+            var documentModel = new Document
+            {
+                DocumentType = documentDto.DocumentType,
+                DocumentName = documentDto.DocumentName,
+                CustomerId = documentDto.CustomerId,
+                Status = "Pending"
+                //  DocumentName = documentDto.File.FileName // save the file name
+                // set other properties
+            };
+
+            using (var memoryStream = new MemoryStream())
+            {
+                documentDto.File.CopyTo(memoryStream);
+                documentModel.DocumentFile = memoryStream.ToArray(); // save the file content
+            }
+
+            int id = _documentService.Add(documentModel);
+            if (id != 0)
+            {
+                return Ok(id);
+            }
+            throw new EntityInsertError("Some issue while adding the document");
+        }
+
+
         private DocumentDto ConvertToDto(Document document)
         {
             return new DocumentDto()
@@ -84,11 +118,12 @@ namespace InsuranceApp.Controllers
                 DocumentId = document.DocumentId,
                 DocumentType = document.DocumentType,
                 DocumentName = document.DocumentName,
-                DocumentFile = document.DocumentFile,
                 CustomerId = document.CustomerId,
-                Status = document.Status,
-                //IsActive = document.IsActive
+                DocumentFile = document.DocumentFile,
+                // File property is not set here as it's not directly transferred to the DTO
             };
+            //IsActive = document.IsActive
+
         }
 
         private Document ConvertToModel(DocumentDto documentDto)
@@ -98,12 +133,10 @@ namespace InsuranceApp.Controllers
                 DocumentId = documentDto.DocumentId,
                 DocumentType = documentDto.DocumentType,
                 DocumentName = documentDto.DocumentName,
-                DocumentFile = documentDto.DocumentFile,
                 CustomerId = documentDto.CustomerId,
-                Status = documentDto.Status,
-                IsActive = true
+                IsActive = true,
+                Status = "Pending"
             };
         }
     }
 }
-

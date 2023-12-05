@@ -40,6 +40,8 @@ namespace InsuranceApp
             builder.Services.AddTransient<IDocumentService, DocumentService>();
             builder.Services.AddTransient<IPaymentService, PaymentService>();
             builder.Services.AddTransient<IClaimService, ClaimService>();
+            builder.Services.AddTransient<ICommissionService, CommissionService>();
+            builder.Services.AddTransient<ICommissionWithdrawalService, CommissionWithdrawalService>();
 
 
             builder.Services.AddDbContext<MyContext>(options =>

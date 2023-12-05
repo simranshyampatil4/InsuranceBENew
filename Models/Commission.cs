@@ -15,7 +15,7 @@ namespace InsuranceApp.Models
         public Customer? Customer { get; set; }
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-        public double CommisionAmount { get; set; }
+        public double CommissionAmount { get; set; }
 
         public bool IsActive { get; set; }
     }
