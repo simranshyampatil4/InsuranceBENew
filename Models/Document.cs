@@ -16,18 +16,19 @@ namespace InsuranceApp.Models
         [StringLength(100, ErrorMessage = "Document name must be no more than 100 characters.")]
         public string DocumentName { get; set; }
 
-        //[Required(ErrorMessage = "Document file is required.")]
-        //[MaxLength(10 * 1024 * 1024, ErrorMessage = "Maximum file size is 10 MB.")]
-        public byte[]? DocumentFile { get; set; } // Assuming a maximum file size of 10 MB
+        [Required(ErrorMessage = "Document file is required.")]
+        [MaxLength(10 * 1024 * 1024, ErrorMessage = "Maximum file size is 10 MB.")]
+        public byte[] DocumentFile { get; set; } // Assuming a maximum file size of 10 MB
+
 
         [Required(ErrorMessage = "Customer is required.")]
         public Customer Customer { get; set; }
 
+        // [Required(ErrorMessage = "Customer is required.")]
+        public string Status { get; set; }
+
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
-
-        [Required(ErrorMessage = "Status is required.")]
-        public string Status { get; set; }
 
         [Required(ErrorMessage = "Document status is required.")]
         public bool IsActive { get; set; }

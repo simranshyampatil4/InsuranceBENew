@@ -4,6 +4,7 @@ using InsuranceApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InsuranceApp.Migrations
 {
     [DbContext(typeof(MyContext))]
-    partial class MyContextModelSnapshot : ModelSnapshot
+    [Migration("20231205043450_query")]
+    partial class query
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,70 +149,6 @@ namespace InsuranceApp.Migrations
                     b.ToTable("Claims");
                 });
 
-            modelBuilder.Entity("InsuranceApp.Models.Commission", b =>
-                {
-                    b.Property<int>("CommissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommissionId"));
-
-                    b.Property<int>("AgentId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("CommissionAmount")
-                        .HasColumnType("float");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("PolicyNo")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommissionId");
-
-                    b.HasIndex("AgentId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("PolicyNo");
-
-                    b.ToTable("Commissions");
-                });
-
-            modelBuilder.Entity("InsuranceApp.Models.CommissionWithdrawal", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgentId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool?>("IsApproved")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("RequestDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<double>("WithdrawalAmount")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AgentId");
-
-                    b.ToTable("CommissionWithdrawals");
-                });
-
             modelBuilder.Entity("InsuranceApp.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
@@ -283,8 +222,6 @@ namespace InsuranceApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<byte[]>("DocumentFile")
-                        .IsRequired()
-                        .HasMaxLength(10485760)
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("DocumentName")
@@ -299,6 +236,10 @@ namespace InsuranceApp.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DocumentId");
 
@@ -494,7 +435,7 @@ namespace InsuranceApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("QueryId"));
 
-                    b.Property<int?>("CustomerId")
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
@@ -512,6 +453,7 @@ namespace InsuranceApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Reply")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("QueryId");
@@ -673,44 +615,6 @@ namespace InsuranceApp.Migrations
                     b.Navigation("InsurancePolicy");
                 });
 
-            modelBuilder.Entity("InsuranceApp.Models.Commission", b =>
-                {
-                    b.HasOne("InsuranceApp.Models.Agent", "Agent")
-                        .WithMany()
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InsuranceApp.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InsuranceApp.Models.InsurancePolicy", "InsurancePolicy")
-                        .WithMany()
-                        .HasForeignKey("PolicyNo")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Agent");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("InsurancePolicy");
-                });
-
-            modelBuilder.Entity("InsuranceApp.Models.CommissionWithdrawal", b =>
-                {
-                    b.HasOne("InsuranceApp.Models.Agent", "Agent")
-                        .WithMany()
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Agent");
-                });
-
             modelBuilder.Entity("InsuranceApp.Models.Customer", b =>
                 {
                     b.HasOne("InsuranceApp.Models.Agent", "Agent")
@@ -805,7 +709,9 @@ namespace InsuranceApp.Migrations
                 {
                     b.HasOne("InsuranceApp.Models.Customer", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });
