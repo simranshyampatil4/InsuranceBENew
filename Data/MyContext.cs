@@ -18,6 +18,7 @@ namespace InsuranceApp.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<SchemeDetails> SchemeDetails { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<Query> Queries { get; set; }
 
         public MyContext(DbContextOptions<MyContext> options) : base(options) { }
 
