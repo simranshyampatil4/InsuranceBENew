@@ -52,15 +52,30 @@ namespace InsuranceApp.Controllers
             throw new EntityInsertError("Some issue while adding the document");
         }
 
-        [HttpPut]
-        public IActionResult Update(DocumentDto documentDto)
+        //[HttpPut]
+        //public IActionResult Update(DocumentDto documentDto)
+        //{
+        //    var existingDocument = _documentService.Check(documentDto.DocumentId);
+        //    if (existingDocument != null)
+        //    {
+        //        var document = ConvertToModel(documentDto);
+        //        var modifiedDocument = _documentService.Update(document);
+        //        return Ok(ConvertToDto(modifiedDocument));
+        //    }
+        //    throw new EntityNotFoundError("No such document record exists");
+        //}
+        [HttpPut("{id}")]
+        public IActionResult Update(int id)
         {
-            var existingDocument = _documentService.Check(documentDto.DocumentId);
+            var existingDocument = _documentService.Check(id);
             if (existingDocument != null)
             {
-                var document = ConvertToModel(documentDto);
-                var modifiedDocument = _documentService.Update(document);
-                return Ok(ConvertToDto(modifiedDocument));
+                // Toggle the Status field
+                existingDocument.Status = existingDocument.Status == "Unverified" ? "Verified" : "Unverified";
+
+                _documentService.Update(existingDocument);
+
+                return Ok(new { DocumentId = existingDocument.DocumentId, Status = existingDocument.Status });
             }
             throw new EntityNotFoundError("No such document record exists");
         }
@@ -120,6 +135,7 @@ namespace InsuranceApp.Controllers
                 DocumentName = document.DocumentName,
                 CustomerId = document.CustomerId,
                 DocumentFile = document.DocumentFile,
+                Status= document.Status,
                 // File property is not set here as it's not directly transferred to the DTO
             };
             //IsActive = document.IsActive
@@ -135,7 +151,7 @@ namespace InsuranceApp.Controllers
                 DocumentName = documentDto.DocumentName,
                 CustomerId = documentDto.CustomerId,
                 IsActive = true,
-                Status = "Pending"
+                Status = "Unverified"
             };
         }
     }

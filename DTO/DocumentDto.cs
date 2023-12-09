@@ -11,6 +11,7 @@ namespace InsuranceApp.DTO
         public int CustomerId { get; set; }
         public IFormFile File { get; set; }
         public byte[]? DocumentFile { get; set; }
+        public string Status { get; set; }
 
 
         //public bool IsActive { get; set; }
